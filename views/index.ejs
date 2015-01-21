@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+<%
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",  // sets automatically host, port and connection security settings
+    auth: {
+        user: "dsoft.tesla@gmail.com",
+        pass: "something001"
+    }
+});
+%>
+<%
+
+smtpTransport.sendMail({  //email options
+    from: "Sender Name <dsoft.tesla@gmail.com>", // sender address.  Must be the same as authenticated user if using Gmail.
+    to: "Receiver Name <michaall.k@gmail.com>", // receiver
+    subject: "TELO" , // include header.ejs
+    text: "BODY" // include confirmBody.ejs + include footer.ejs
+}, function(error, response){  //callback
+    if(error){
+        console.log(error);
+    }else{
+        console.log("Message sent: " + response.message);
+    }
+
+    smtpTransport.close(); // shut down the connection pool, no more messages.  Comment this line out to continue sending emails.
+});
+%>
+  <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+
+  </body>
+</html>
