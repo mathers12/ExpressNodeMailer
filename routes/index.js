@@ -65,7 +65,7 @@ router.get('/', function(req, res, next) {
     //INDEX
     res.render('index', { header: dummy_data.header, body: dummy_data.body,footer: dummy_data.footer},function(err,html)
         {
-            sendEmail(header,body,footer);
+            //sendEmail(header,body,footer);
             res.send(html);
         }
 
