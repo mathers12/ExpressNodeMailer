@@ -3,7 +3,6 @@ var router = express.Router();
 //NODEMAILER
 var nodemailer = require("nodemailer");
 var partials = require("express-partials");
-
 var app = express();
 
 
@@ -19,23 +18,13 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
     }
 });
 
-//HEADER
-app.render('../views/header.ejs', function (err, html) {
+var dummy_data = {
+    header: "Express",
+    footer: "James Thilla",
+    body: "Plain text"
+};
 
-    header = html;
-})
-    app.render('../views/confirmBody.ejs', function (err, html) {
-
-        body = html;
-    });
-
-    app.render('../views/footer.ejs', function (err, html) {
-
-        footer = html;
-        sendEmail();
-    });
-
-function sendEmail ()
+function sendEmail (header,body,footer)
 {
 
     smtpTransport.sendMail({  //email options
@@ -57,7 +46,32 @@ function sendEmail ()
 }
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express',nodemailer: nodemailer, partials: partials});
+    //HEADER
+    res.render('header', { header: dummy_data.header},function(err,html) {
+         header = html;
+    });
+
+    //BODY
+    res.render('confirmBody', { body: dummy_data.body},function(err,html) {
+        body = html;
+    });
+
+    //FOOTER
+
+    res.render('footer', { footer: dummy_data.footer},function(err,html) {
+        footer = html;
+    });
+
+    //INDEX
+    res.render('index', { header: dummy_data.header, body: dummy_data.body,footer: dummy_data.footer},function(err,html)
+        {
+            sendEmail(header,body,footer);
+            res.send(html);
+        }
+
+    );
+
+
 });
 
 module.exports = router;
