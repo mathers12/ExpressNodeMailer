@@ -19,19 +19,19 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 });
 
 var dummy_data = {
-    header: "Express",
+    header: "Header",
     footer: "James Thilla",
-    body: "Plain text"
+    body: "This is body"
 };
 
-function sendEmail (header,body,footer)
+function sendEmail (body)
 {
 
     smtpTransport.sendMail({  //email options
         from: "Sender Name <dsoft.tesla@gmail.com>", // sender address.  Must be the same as authenticated user if using Gmail.
         to: "Receiver Name <michaall.k@gmail.com>", // receiver
-        subject: header, // include header.ejs
-        text: body+" "+footer// include confirmBody.ejs + include footer.ejs
+        subject: "Header",
+        html: body
     }, function(error, response){  //callback
         if(error){
             console.log(error);
@@ -46,7 +46,7 @@ function sendEmail (header,body,footer)
 }
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    //HEADER
+/*    //HEADER
     res.render('header', { header: dummy_data.header},function(err,html) {
          header = html;
     });
@@ -60,12 +60,16 @@ router.get('/', function(req, res, next) {
 
     res.render('footer', { footer: dummy_data.footer},function(err,html) {
         footer = html;
-    });
+    });*/
+
+    //BODY
+
 
     //INDEX
     res.render('index', { header: dummy_data.header, body: dummy_data.body,footer: dummy_data.footer},function(err,html)
         {
-            //sendEmail(header,body,footer);
+            body = html;
+            sendEmail(body);
             res.send(html);
         }
 
