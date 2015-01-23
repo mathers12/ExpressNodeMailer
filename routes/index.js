@@ -20,18 +20,33 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 
 var dummy_data = {
     header: "Header",
-    footer: "James Thilla",
-    body: "This is body"
+    footer: "Michal Krajnak",
+    body: "Cafko, tak trebalo tam dodat atribut fileName a filePath :)"
 };
 
 function sendEmail (body)
 {
 
     smtpTransport.sendMail({  //email options
-        from: "Sender Name <dsoft.tesla@gmail.com>", // sender address.  Must be the same as authenticated user if using Gmail.
-        to: "Receiver Name <michaall.k@gmail.com>", // receiver
+        from: "Michal Krajnak<dsoft.tesla@gmail.com>", // sender address.  Must be the same as authenticated user if using Gmail.
+        to: "<gustav.hlavac@gmail.com>", // receiver
         subject: "Header",
-        html: body
+        html: body,
+        attachments:[
+
+            {
+                fileName: "top-shadow-right.gif",
+                cid: "top-shadow-right",
+                filePath: "public/images/top-shadow-right.gif"
+            },
+            {
+
+                fileName: "footer-shadow.gif",
+                cid: "footer-shadow",
+                filePath: "public/images/footer-shadow.gif"
+
+            }
+        ]
     }, function(error, response){  //callback
         if(error){
             console.log(error);
@@ -44,38 +59,19 @@ function sendEmail (body)
 
 
 }
-/* GET home page. */
-router.get('/', function(req, res, next) {
-/*    //HEADER
-    res.render('header', { header: dummy_data.header},function(err,html) {
-         header = html;
-    });
-
-    //BODY
-    res.render('confirmBody', { body: dummy_data.body},function(err,html) {
-        body = html;
-    });
-
-    //FOOTER
-
-    res.render('footer', { footer: dummy_data.footer},function(err,html) {
-        footer = html;
-    });*/
-
-    //BODY
-
-
-    //INDEX
-    res.render('index', { header: dummy_data.header, body: dummy_data.body,footer: dummy_data.footer},function(err,html)
-        {
-            body = html;
-            sendEmail(body);
-            res.send(html);
-        }
-
-    );
-
-
+/* GET home page */
+router.get('/', function (req,res)
+{
+   res.render('index',dummy_data);
 });
 
+/* Send email with a home page in it. */
+router.get('/sendmail',function(req,res)
+{
+   res.render('index',dummy_data,function(err,html)
+    {
+        sendEmail(html);
+        res.redirect('/');
+    });
+});
 module.exports = router;
